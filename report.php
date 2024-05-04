@@ -347,11 +347,11 @@
     $i=0;
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table> <tr> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Favorite Genre </th> </tr>';
+       echo '<table class="table table-dark"> <tr><th></th> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Favorite Genre </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
             $i++;
-           echo '<form method="post"> <tr > <td name="uid">' . $i . '</td>
+           echo '<form method="post"> <tr > <td></td> <td name="uid">' . $i . '</td>
            <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
            <td> ' . $row["gender"] . '</td>
            <td>' . $row["favGenre"] . '</td>
@@ -404,7 +404,7 @@
           define('FOO_EXECUTED', true);
         }
        }
-       echo '</table>';
+       echo '</table><br>';
     }
     else
     {
@@ -425,11 +425,11 @@
     $i=0;
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table> <tr> <th> Id </th> <th> Name </th> <th> Account Type </th> <th> Country </th> </tr>';
+       echo '<table class="table table-dark"> <tr> <th></th> <th> Id </th> <th> Name </th> <th> Account Type </th> <th> Country </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
             $i++;
-           echo '<form method="post"> <tr > <td name="uid">' . $i . '</td>
+           echo '<form method="post"> <tr > <td></td> <td name="uid">' . $i . '</td>
            <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
            <td> ' . $row["accType"] . '</td>
            <td>' . $row["country"] . '</td>
@@ -482,12 +482,26 @@
           define('FOO_EXECUTED', true);
         }
        }
-       echo '</table>';
+       echo '</table><br>';
     }
     else
     {
         echo "0 results";
     }
+    // closing connection
+    mysqli_close($con);
+
+?>
+
+<?php
+    //creating connection to database
+    $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
+    $sql = "SELECT COUNT(userid) FROM tblUserProfile WHERE accType='User' AND country='Philippines' ";
+    //fire query
+    $result = mysqli_query($con, $sql);
+    $res = mysqli_fetch_array($result);
+    echo '<table class="table table-dark"> <tr> <th><th> Number of Users in the Philippines </th> </tr>
+    <tr><td></td><td> '.$res[0].' </td></tr></table>';
     // closing connection
     mysqli_close($con);
 
