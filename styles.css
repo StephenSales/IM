@@ -1,0 +1,36 @@
+.divpost{
+    margin-left: 30%; 
+    margin-right: 30%; 
+    margin-top: 2%;
+    width: 100%;
+}
+
+.more{
+    margin-left: 1040%; 
+    border: none; 
+    background-color: transparent;
+}
+
+.reactbox{
+    display: flex;
+    margin-bottom: 3%;
+}
+
+.react{
+    margin-left: 5%;
+}
+
+.icon{
+    height: 3%;
+}
+
+#title{
+    background-color: transparent;
+    border: none;
+}
+
+#poststitle{
+    margin-top: 2%;
+    margin-left: 30%;
+}
+
