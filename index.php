@@ -166,7 +166,7 @@
     <div class="row justify-content-evenly">
     <?php
   // session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
       or die("Error in connection");
   if(isset($_POST['loginSubmit'])){
     $uname=$_POST['uname'];
@@ -339,7 +339,7 @@
   </div>
   <?php
     //creating connection to database
-    $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
+    $con = mysqli_connect("127.0.0.1","root","","dbgeminaf1");
     $sql = "SELECT userid, firstname, lastname, gender, birthdate, accType, country, favGenre FROM tblUserProfile";
     //fire query
     $result = mysqli_query($con, $sql);
