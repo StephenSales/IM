@@ -347,7 +347,7 @@
     $i=0;
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table class="table table-dark"> <tr><th></th> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Favorite Genre </th> </tr>';
+       echo '<table class="table table-dark"> <tr><th></th> <th> No. </th> <th> Name </th> <th> Gender </th> <th> Favorite Genre </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
             $i++;
@@ -425,7 +425,7 @@
     $i=0;
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table class="table table-dark"> <tr> <th></th> <th> Id </th> <th> Name </th> <th> Account Type </th> <th> Country </th> </tr>';
+       echo '<table class="table table-dark"> <tr> <th></th> <th> No. </th> <th> Name </th> <th> Account Type </th> <th> Country </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
             $i++;

@@ -346,10 +346,10 @@
     $temp = "0";
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table> <tr> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Birthdate </th> <th> Account Type </th> <th> Country </th> <th> Favorite Genre </th> </tr>';
+       echo '<table class="table"> <tr> <th></th> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Birthdate </th> <th> Account Type </th> <th> Country </th> <th> Favorite Genre </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
-           echo '<form method="post"> <tr > <td name="uid">' . $row["userid"] . '</td>
+           echo '<form method="post"> <tr ><td></td> <td name="uid">' . $row["userid"] . '</td>
            <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
            <td> ' . $row["gender"] . '</td>
            <td>' . $row["birthdate"] . '</td>
