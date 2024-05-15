@@ -28,11 +28,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="ContactUs.html">Contact Us</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="report.php">Report <span class="sr-only">(current)</span></a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="stats.php">Statistics</a>
+                <a class="nav-link" href="report.php">Report</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="stats.php">Statistics<span class="sr-only">(current)</span></a>
             </li>
           </ul>
         </div>
@@ -342,175 +342,102 @@
       </button>
     </div>
   </div>
-  <?php
+
+<?php
     //creating connection to database
     $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
-    $sql = "SELECT firstname, lastname, gender, favGenre FROM tblUserProfile WHERE gender='Male' AND favGenre='Romance' ";
+    $sql = "SELECT COUNT(userid) AS customerCount, gender FROM tblUserProfile GROUP BY gender";
     //fire query
     $result = mysqli_query($con, $sql);
-    $temp = "0";
-    $i=0;
-    if(mysqli_num_rows($result) > 0)
-    {
-       echo '<table class="table table-dark"> <tr><th></th> <th> No. </th> <th> Name </th> <th> Gender </th> <th> Favorite Genre </th> </tr>';
-       while($row = mysqli_fetch_assoc($result)){
-         // to output mysql data in HTML table format
-            $i++;
-           echo '<form method="post"> <tr > <td></td> <td name="uid">' . $i . '</td>
-           <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
-           <td> ' . $row["gender"] . '</td>
-           <td>' . $row["favGenre"] . '</td>
-           <td> <button type="button" name="btnUpdate" data-bs-toggle="modal" data-bs-target="#updateModal" id="updatebtn">Update</button>
-            <input type="submit" name="btnDelete" value="Delete"> </td> </tr> </form>
-            
-            <!-- Update Modal -->
-        <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="regModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-            <form method="post">  
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">First Name</span>
-                  <!-- <input name="old_fname" style="pointer-events: none" class="input-group-text" id="addon-wrapping" value="'. $row["firstname"] .'"> -->
-                  <input name="new_fname" type="text" aria-label="First name" class="form-control">
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">Last Name</span>
-                  <!-- <input name="old_lname" style="pointer-events: none" class="input-group-text" id="addon-wrapping" value="'. $row["lastname"] .'"> -->
-                  <input name="new_lname" type="text" aria-label="First name" class="form-control">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" name="updateSubmit">
-              </div>
-            </form>
-            </div>
-          </div>
-        </div>';
-        if(isset($_POST['btnDelete'])){
-          $sql1 ="Delete from tbluserprofile where userid = '".$row["userid"]."'";
-          mysqli_query($con,$sql1);
+    if(mysqli_num_rows($result) > 0) {
+        echo '<table class="table table-dark"> <tr> <th></th> <th> Gender </th> <th> Number of Accounts </th></tr>';
+        while($row = mysqli_fetch_assoc($result)){
+            echo '<tr><td></td><td>' . $row["gender"] . '</td> <td>' . $row["customerCount"] . '</td>';
         }
-        if (!defined('FOO_EXECUTED')) {
-          if(isset($_POST['updateSubmit'])){
-            $new_fname=$_POST['new_fname'];
-            $new_lname=$_POST['new_lname'];
-            // $old_fname=$_POST['old_fname'];
-            // $old_lname=$_POST['old_lname'];
-            // $sql1 ="Update tbluserprofile set firstname='".$new_fname."', lastname='".$new_lname."' where firstname='".$old_fname."' AND lastname='".$old_lname."'";
-            $sql1 ="Update tbluserprofile set firstname='".$new_fname."', lastname='".$new_lname."' where userid = '".$row["userid"]."'";
-            mysqli_query($con,$sql1);
-          }
-          define('FOO_EXECUTED', true);
-        }
-       }
-       echo '</table><br>';
-    }
-    else
-    {
+        echo '</table><br>';
+    } else {
         echo "0 results";
     }
     // closing connection
     mysqli_close($con);
-
 ?>
 
 <?php
     //creating connection to database
     $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
-    $sql = "SELECT firstname, lastname, accType, country FROM tblUserProfile WHERE accType='Publisher' AND country='China' ";
+    $sql = "SELECT COUNT(userid) AS customerCount, accType FROM tblUserProfile GROUP BY accType";
     //fire query
     $result = mysqli_query($con, $sql);
-    $temp = "0";
-    $i=0;
-    if(mysqli_num_rows($result) > 0)
-    {
-       echo '<table class="table table-dark"> <tr> <th></th> <th> No. </th> <th> Name </th> <th> Account Type </th> <th> Country </th> </tr>';
-       while($row = mysqli_fetch_assoc($result)){
-         // to output mysql data in HTML table format
-            $i++;
-           echo '<form method="post"> <tr > <td></td> <td name="uid">' . $i . '</td>
-           <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
-           <td> ' . $row["accType"] . '</td>
-           <td>' . $row["country"] . '</td>
-           <td> <button type="button" name="btnUpdate" data-bs-toggle="modal" data-bs-target="#updateModal" id="updatebtn">Update</button>
-            <input type="submit" name="btnDelete" value="Delete"> </td> </tr> </form>
-            
-            <!-- Update Modal -->
-        <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="regModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-            <form method="post">  
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">First Name</span>
-                  <!-- <input name="old_fname" style="pointer-events: none" class="input-group-text" id="addon-wrapping" value="'. $row["firstname"] .'"> -->
-                  <input name="new_fname" type="text" aria-label="First name" class="form-control">
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">Last Name</span>
-                  <!-- <input name="old_lname" style="pointer-events: none" class="input-group-text" id="addon-wrapping" value="'. $row["lastname"] .'"> -->
-                  <input name="new_lname" type="text" aria-label="First name" class="form-control">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" name="updateSubmit">
-              </div>
-            </form>
-            </div>
-          </div>
-        </div>';
-        if(isset($_POST['btnDelete'])){
-          $sql1 ="Delete from tbluserprofile where userid = '".$row["userid"]."'";
-          mysqli_query($con,$sql1);
+    if(mysqli_num_rows($result) > 0) {
+        echo '<table class="table table-dark"> <tr> <th></th> <th> Account Type </th> <th> Number of Accounts </th></tr>';
+        while($row = mysqli_fetch_assoc($result)){
+            echo '<tr><td></td><td>' . $row["accType"] . '</td> <td>' . $row["customerCount"] . '</td>';
         }
-        if (!defined('FOO_EXECUTED')) {
-          if(isset($_POST['updateSubmit'])){
-            $new_fname=$_POST['new_fname'];
-            $new_lname=$_POST['new_lname'];
-            // $old_fname=$_POST['old_fname'];
-            // $old_lname=$_POST['old_lname'];
-            // $sql1 ="Update tbluserprofile set firstname='".$new_fname."', lastname='".$new_lname."' where firstname='".$old_fname."' AND lastname='".$old_lname."'";
-            $sql1 ="Update tbluserprofile set firstname='".$new_fname."', lastname='".$new_lname."' where userid = '".$row["userid"]."'";
-            mysqli_query($con,$sql1);
-          }
-          define('FOO_EXECUTED', true);
-        }
-       }
-       echo '</table><br>';
-    }
-    else
-    {
+        echo '</table><br>';
+    } else {
         echo "0 results";
     }
     // closing connection
     mysqli_close($con);
-
 ?>
 
 <?php
     //creating connection to database
     $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
-    $sql = "SELECT COUNT(userid) FROM tblUserProfile WHERE accType='User' AND country='Philippines' ";
+    $sql = "SELECT COUNT(userid) AS customerCount, favGenre FROM tblUserProfile GROUP BY favGenre";
     //fire query
     $result = mysqli_query($con, $sql);
-    $res = mysqli_fetch_array($result);
-    echo '<table class="table table-dark"> <tr> <th><th> Number of Users in the Philippines </th> </tr>
-    <tr><td></td><td> '.$res[0].' </td></tr></table>';
+    if(mysqli_num_rows($result) > 0) {
+        echo '<table class="table table-dark"> <tr> <th></th> <th> Favorite Genre </th> <th> Number of Accounts </th></tr>';
+        while($row = mysqli_fetch_assoc($result)){
+            echo '<tr><td></td><td>' . $row["favGenre"] . '</td> <td>' . $row["customerCount"] . '</td>';
+        }
+        echo '</table><br>';
+    } else {
+        echo "0 results";
+    }
     // closing connection
     mysqli_close($con);
-
 ?>
+
+<?php
+    //creating connection to database
+    $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
+    $sql = "SELECT COUNT(userid) AS customerCount, country FROM tblUserProfile GROUP BY country";
+    //fire query
+    $result = mysqli_query($con, $sql);
+    if(mysqli_num_rows($result) > 0) {
+        echo '<table class="table table-dark"> <tr> <th></th> <th> Country </th> <th> Number of Accounts </th></tr>';
+        while($row = mysqli_fetch_assoc($result)){
+            echo '<tr><td></td><td>' . $row["country"] . '</td> <td>' . $row["customerCount"] . '</td>';
+        }
+        echo '</table><br>';
+    } else {
+        echo "0 results";
+    }
+    // closing connection
+    mysqli_close($con);
+?>
+
+<?php
+    //creating connection to database
+    $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
+    $sql = "SELECT COUNT(userid) AS customerCount, age FROM tblUserProfile GROUP BY age";
+    //fire query
+    $result = mysqli_query($con, $sql);
+    if(mysqli_num_rows($result) > 0) {
+        echo '<table class="table table-dark"> <tr> <th></th> <th> Age </th> <th> Number of Accounts </th></tr>';
+        while($row = mysqli_fetch_assoc($result)){
+            echo '<tr><td></td><td>' . $row["age"] . '</td> <td>' . $row["customerCount"] . '</td>';
+        }
+        echo '</table><br>';
+    } else {
+        echo "0 results";
+    }
+    // closing connection
+    mysqli_close($con);
+?>
+
     <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer">
       <div class="text-center p-3" id="footertext">
         Roddneil B. Gemina and Stephen Clint D. Sales

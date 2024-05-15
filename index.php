@@ -31,6 +31,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="report.php">Report</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="stats.php">Statistics</a>
+            </li>
           </ul>
         </div>
         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#regModal">
@@ -166,7 +169,7 @@
     <div class="row justify-content-evenly">
     <?php
   // session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
       or die("Error in connection");
   if(isset($_POST['loginSubmit'])){
     $uname=$_POST['uname'];
@@ -204,7 +207,9 @@
     $accType=$_POST['rAccType'];
     
     $bdate=date("Y-m-d", strtotime($bdateReg));
-
+    $today = date("Y-m-d");
+    $diff = date_diff(date_create($bdate), date_create($today));
+    $age = $diff->format('%y');
 		//for tbluseraccount
 		$email=$_POST['email'];		
 		$uname=$_POST['unameReg'];
@@ -220,7 +225,7 @@
 		if($row == 0){
 			$sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$uname."','".$pword."')";
 			$result = mysqli_query($con,$sql);
-      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."')";
+      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre,age) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."','".$age."')";
 		  $result = mysqli_query($con,$sql1);
 			echo "<div class='alert alert-success text-center' role='alert'>
       Registered successfully!
@@ -339,17 +344,17 @@
   </div>
   <?php
     //creating connection to database
-    $con = mysqli_connect("127.0.0.1","root","","dbgeminaf1");
+    $con = mysqli_connect("127.0.0.1","root","","dbsalesf1");
     $sql = "SELECT userid, firstname, lastname, gender, birthdate, accType, country, favGenre FROM tblUserProfile";
     //fire query
     $result = mysqli_query($con, $sql);
     $temp = "0";
     if(mysqli_num_rows($result) > 0)
     {
-       echo '<table> <tr> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Birthdate </th> <th> Account Type </th> <th> Country </th> <th> Favorite Genre </th> </tr>';
+       echo '<table class="table"> <tr> <th></th> <th> Id </th> <th> Name </th> <th> Gender </th> <th> Birthdate </th> <th> Account Type </th> <th> Country </th> <th> Favorite Genre </th> </tr>';
        while($row = mysqli_fetch_assoc($result)){
          // to output mysql data in HTML table format
-           echo '<form method="post"> <tr > <td name="uid">' . $row["userid"] . '</td>
+           echo '<form method="post"> <tr ><td></td> <td name="uid">' . $row["userid"] . '</td>
            <td>' . $row["firstname"] ." ". $row["lastname"] . '</td>
            <td> ' . $row["gender"] . '</td>
            <td>' . $row["birthdate"] . '</td>
