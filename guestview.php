@@ -44,7 +44,7 @@
             </li>
           </ul>
 
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#regModal">
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#regModal" style="margin-right: 0.3%">
           Register
         </button>
 
