@@ -2,64 +2,17 @@
   session_start();
   $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
       or die("Error in connection");
-  if(isset($_POST['loginSubmit'])){
-    $uname=$_POST['uname'];
-      $pwd=$_POST['pwd'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<script language='javascript'>
-                      alert('username not existing.'); 
-              </script>";
-      }else if($row[3] != $pwd) {
-          echo "<script language='javascript'>
-                      alert('Incorrect password');
-              </script>";
-      }else{
-          $_SESSION['username']=$row[0];
-          echo "<script language='javascript'>
-                      alert('Welcome User: $uname'); 
-              </script>";
-      }
+  if(isset($_POST['publishSubmit'])){
+    $accID = $_SESSION['accID'];
+    $title = $_POST['title'];
+    $content = $_POST['content'];
+
+    $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
+    $result = mysqli_query($con,$sql);
+    echo "<div class='alert alert-success text-center' role='alert'>
+      Story posted successfully!
+    </div>";
   }
-  if(isset($_POST['registerSubmit'])){		
-		//retrieve data from form and save the value to a variable
-		//for tbluserprofile
-		$fname=$_POST['fname'];		
-		$lname=$_POST['lname'];
-		
-		
-		//for tbluseraccount
-		$email=$_POST['email'];		
-		$uname=$_POST['unameReg'];
-		$pword=$_POST['pwdReg'];
-		
-		//save data to tbluserprofile			
-		$sql1 ="Insert into tbluserprofile(firstname,lastname) values('".$fname."','".$lname."')";
-		$result = mysqli_query($con,$sql1);
-		
-		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
-		$result = mysqli_query($con,$sql2);
-		$row = mysqli_num_rows($result);
-		if($row == 0){
-			$sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$uname."','".$pword."')";
-			$result = mysqli_query($con,$sql);
-			echo "<script language='javascript'>
-						alert('New record saved.');
-				  </script>";
-		}else{
-			echo "<script language='javascript'>
-						alert('Username already existing');
-				  </script>";
-		}
-			
-		
-	}
 ?> -->
 <!DOCTYPE html>
 <html>
@@ -106,7 +59,10 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
             <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Username
+                <?php
+                  $word = $_SESSION['username'];
+                  echo "$word";
+                ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item" href="profile.php">Profile</a></li>
@@ -120,31 +76,37 @@
   </div>
 
   <h3 id="poststitle">Stories</h3>
-  <button type="button" class="btn btn-primary" style="margin-left: 30%;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Write Story</button>
+  <?php
+    if ($_SESSION['accType'] == "Publisher") {
+      echo '<button type="button" class="btn btn-primary" style="margin-left: 30%;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Write Story</button>';
+    }
+  ?>
+  
   <!-- Create Post Modal / ONLY SHOW WHEN PUBLISHER ANG ACCOUNT -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
+      <form method="post">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Chapter Contents</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form>
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Title</label>
-              <input type="text" class="form-control" id="storytitle">
+              <input type="text" class="form-control" name="title">
             </div>
             <div class="mb-3">
               <label for="message-text" class="col-form-label">Content</label>
-              <textarea class="form-control" id="storycontent"></textarea>
+              <textarea class="form-control" name="content"></textarea>
             </div>
-          </form>
+          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Publish</button>
+          <input type="submit" class="btn btn-primary" value="Publish" name="publishSubmit">
         </div>
+      </form>
       </div>
     </div>
   </div>
