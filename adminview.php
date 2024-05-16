@@ -122,106 +122,42 @@
         </ul>
     </nav>
     </div>
-  </div>
+</div>
 
-  <h3 id="poststitle">Stories</h3>
-  <button type="button" class="btn btn-primary" style="margin-left: 30%;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Write Story</button>
-  <!-- Create Post Modal / ONLY SHOW WHEN PUBLISHER ANG ACCOUNT -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Chapter Contents</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label">Title</label>
-              <input type="text" class="form-control" id="storytitle">
-            </div>
-            <div class="mb-3">
-              <label for="message-text" class="col-form-label">Content</label>
-              <textarea class="form-control" id="storycontent"></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Publish</button>
-        </div>
-      </div>
+    <h3 id="poststitle">Publisher Requests</h3>
+    <div id="tblRequests">
+    <table class="table table-dark">
+        <thead>
+            <th>
+                <p>uid</p>
+            </th>
+            <th>
+                <p>Username</p>
+            </th>
+            <th>
+                <p>Country</p>
+            </th>
+            <th>
+                <p>Birthdate</p>
+            </th>
+            <th>
+                <p>Action</p>
+            </th>
+        </thead>
+        <tbody>
+            <th>3</th>
+            <td>Larry the Bird</td>
+            <td>Malaysia</td>
+            <td>01/02/2003</td> 
+            <td>
+                <input type="submit" name="btnAccept" value="Accept" style="margin-right: 0.3%">
+                <input type="submit" name="btnDecline" value="Decline">
+            </td>
+            </tr>
+        </tbody>
+        </table>
     </div>
-  </div>
   
-  <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-            <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
-              <img height="25rem" src="more.png">
-            </button>
-            <ul class="dropdown-menu dropdown-menu-light">
-                <li><a class="dropdown-item" href="#">Edit</a></li>
-                <li><a class="dropdown-item" href="#">Delete</a></li>
-                <!-- Naa rani sa posts sa opened account -->
-            </ul>
-            </li>
-        </ul>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Sample caption</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Sample caption</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Caaaptionnn.</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
     <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray; ">
       <div class="text-center p-3" id="footertext">
         Roddneil B. Gemina and Stephen Clint D. Sales

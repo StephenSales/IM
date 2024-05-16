@@ -333,10 +333,10 @@
       </div>
     </div>
   </div> 
-    <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer">
+    <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray;">
       <div class="text-center p-3" id="footertext">
         Roddneil B. Gemina and Stephen Clint D. Sales
-        <br/>
+        <br>
         BSCS - 2
       </div>
     </footer>
