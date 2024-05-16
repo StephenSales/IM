@@ -1,5 +1,90 @@
 <?php
   session_start();
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+      or die("Error in connection");
+  if(isset($_POST['loginSubmit'])){
+    $uname=$_POST['uname'];
+      $pwd=$_POST['pwd'];
+      $sql ="select * from tbluseraccount where username='".$uname."'";
+      $result = mysqli_query($con,$sql);
+      $count = mysqli_num_rows($result);
+      
+      $row = mysqli_fetch_array($result);
+      
+      if($count== 0){
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          User does not exist.
+        </div>";
+      }else if($row[3] != $pwd) {
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          Incorrect password.
+        </div>";
+      }else{
+          $_SESSION['accID']=$row[0];
+          $_SESSION['username']=$row[2];
+          $_SESSION['accType']=$row[4];
+          header("Location: homeview.php");
+      }
+  }
+  if(isset($_POST['registerSubmit'])){		
+		//retrieve data from form and save the value to a variable
+		//for tbluserprofile
+		$fname=$_POST['fname'];		
+		$lname=$_POST['lname'];
+    $country=$_POST['countryReg'];
+    $genre=$_POST['genreReg'];
+    $country=$_POST['countryReg'];
+    $bdateReg=$_POST['bdateReg'];
+		$gender=$_POST['rGender'];
+    $accType=$_POST['rAccType'];
+    
+    $bdate=date("Y-m-d", strtotime($bdateReg));
+    $today = date("Y-m-d");
+    $diff = date_diff(date_create($bdate), date_create($today));
+    $age = $diff->format('%y');
+		//for tbluseraccount
+		$email=$_POST['email'];		
+		$uname=$_POST['unameReg'];
+		$pword=$_POST['pwdReg'];
+		
+		//save data to tbluserprofile			
+		
+		
+		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
+		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
+		$result = mysqli_query($con,$sql2);
+		$row = mysqli_num_rows($result);
+		if($row == 0){
+			$sql ="Insert into tbluseraccount(emailadd,username,password,accType) values('".$email."','".$uname."','".$pword."','".$accType."')";
+			$result = mysqli_query($con,$sql);
+      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre,age) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."','".$age."')";
+		  $result = mysqli_query($con,$sql1);
+			echo "<div class='alert alert-success text-center' role='alert'>
+      Registered successfully!
+    </div>";
+		}else{
+			echo "<div class='alert alert-danger text-center' role='alert'>
+      Username already exists.
+    </div>";
+		}
+	}
+  if(isset($_POST['premiumSubmit'])){
+      $uname=$_POST['unamePrem'];
+      $duration=$_POST['flexRadioDefault'];
+      $sql ="select * from tbluseraccount where username='".$uname."'";
+      $result = mysqli_query($con,$sql);
+      $count = mysqli_num_rows($result);
+      
+      $row = mysqli_fetch_array($result);
+      
+      if($count== 0){
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          User does not exist.
+        </div>";
+      }else{
+        $sql1 ="Insert into tblpremium(userid) values('".$row[0]."')";
+      }
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -167,93 +252,7 @@
         </div>
     </nav>
     <div class="row justify-content-evenly">
-    <?php
-  // session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
-      or die("Error in connection");
-  if(isset($_POST['loginSubmit'])){
-    $uname=$_POST['uname'];
-      $pwd=$_POST['pwd'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          User does not exist.
-        </div>";
-              
-      }else if($row[3] != $pwd) {
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          Incorrect password.
-        </div>";
-      }else{
-          $_SESSION['username']=$row[0];
-          echo "<h2 class='text-center'>WELCOME TO THE WEBSITE $uname</h2>";
-      }
-  }
-  if(isset($_POST['registerSubmit'])){		
-		//retrieve data from form and save the value to a variable
-		//for tbluserprofile
-		$fname=$_POST['fname'];		
-		$lname=$_POST['lname'];
-    $country=$_POST['countryReg'];
-    $genre=$_POST['genreReg'];
-    $country=$_POST['countryReg'];
-    $bdateReg=$_POST['bdateReg'];
-		$gender=$_POST['rGender'];
-    $accType=$_POST['rAccType'];
     
-    $bdate=date("Y-m-d", strtotime($bdateReg));
-    $today = date("Y-m-d");
-    $diff = date_diff(date_create($bdate), date_create($today));
-    $age = $diff->format('%y');
-		//for tbluseraccount
-		$email=$_POST['email'];		
-		$uname=$_POST['unameReg'];
-		$pword=$_POST['pwdReg'];
-		
-		//save data to tbluserprofile			
-		
-		
-		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
-		$result = mysqli_query($con,$sql2);
-		$row = mysqli_num_rows($result);
-		if($row == 0){
-			$sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$uname."','".$pword."')";
-			$result = mysqli_query($con,$sql);
-      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre,age) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."','".$age."')";
-		  $result = mysqli_query($con,$sql1);
-			echo "<div class='alert alert-success text-center' role='alert'>
-      Registered successfully!
-    </div>";
-		}else{
-			echo "<div class='alert alert-danger text-center' role='alert'>
-      Username already exists.
-    </div>";
-		}
-	}
-  if(isset($_POST['premiumSubmit'])){
-      $uname=$_POST['unamePrem'];
-      $duration=$_POST['flexRadioDefault'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          User does not exist.
-        </div>";
-      }else{
-        $sql1 ="Insert into tblpremium(userid) values('".$row[0]."')";
-      }
-  }
-?>
     <div class="text-center">
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#premiumModal" id="premiumBtn">
           BECOME A PREMIUM USER NOW
