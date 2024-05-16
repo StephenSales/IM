@@ -1,6 +1,6 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
       or die("Error in connection");
   if(isset($_POST['loginSubmit'])){
     $uname=$_POST['uname'];
