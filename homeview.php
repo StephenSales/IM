@@ -88,7 +88,7 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="Home.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="homeview.php">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="AboutUs.html">About Us</a>
@@ -109,9 +109,9 @@
                 Username
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Engagements</a></li>
-                <li><a class="dropdown-item" href="#">Log out</a></li>
+                <li><a class="dropdown-item" href="profile.php">Profile</a></li>
+                <li><a class="dropdown-item" href="engagements.php">Engagements</a></li>
+                <li><a class="dropdown-item" href="index.php">Log out</a></li>
             </ul>
             </li>
         </ul>
@@ -121,7 +121,7 @@
 
   <h3 id="poststitle">Stories</h3>
   <button type="button" class="btn btn-primary" style="margin-left: 30%;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Write Story</button>
-<!-- Create Post Modal -->
+  <!-- Create Post Modal / ONLY SHOW WHEN PUBLISHER ANG ACCOUNT -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -133,11 +133,11 @@
           <form>
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Title</label>
-              <input type="text" class="form-control" id="recipient-name">
+              <input type="text" class="form-control" id="storytitle">
             </div>
             <div class="mb-3">
               <label for="message-text" class="col-form-label">Content</label>
-              <textarea class="form-control" id="message-text"></textarea>
+              <textarea class="form-control" id="storycontent"></textarea>
             </div>
           </form>
         </div>
