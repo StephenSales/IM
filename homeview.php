@@ -1,6 +1,6 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
       or die("Error in connection");
   if(isset($_POST['publishSubmit'])){
     $accID = $_SESSION['accID'];
@@ -117,6 +117,53 @@
   </div>
   
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
+    <?php
+      $sql = "SELECT accID, title, content FROM tblposts ORDER BY postID DESC";
+      $result = mysqli_query($con, $sql);
+      $currOwner = $_SESSION['username'];
+
+      if(mysqli_num_rows($result) > 0)
+      {
+       while($row = mysqli_fetch_assoc($result)){
+        $sql2 = "SELECT username FROM tbluseraccount WHERE acctID='".$row["accID"]."'";
+        $res = mysqli_query($con, $sql2);
+        $row2 = mysqli_fetch_array($res);
+        $postOwner = $row2[0];
+        echo '<div class="divpost">
+        <div class="d-flex p-2">
+          <img src="avatar.jpg" height="25" style="margin-right: 1%">
+          <h6>'.$postOwner.'</h6>';
+          if ($postOwner == $currOwner) {
+            echo '<ul class="navbar-nav">
+            <li class="nav-item dropdown">
+            <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
+              <img height="25rem" src="more.png">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-light">
+                <li><a class="dropdown-item" href="#">Edit</a></li>
+                <li><a class="dropdown-item" href="#">Delete</a></li>
+                <!-- Naa rani sa posts sa opened account -->
+            </ul>
+            </li>
+        </ul>';
+          }
+      echo '</div>
+        <div class="card" style="width: 35rem;">
+          <img src="pic2.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">'.$row["title"].'</p>
+          </div>
+          <hr>
+          <div class="reactbox">
+            <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+          </div>
+        </div>
+      </div>';
+       }
+      }
+    ?>
     <div class="divpost">
       <div class="d-flex p-2">
         <img src="avatar.jpg" height="25" style="margin-right: 1%">
