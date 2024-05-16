@@ -1,6 +1,6 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
       or die("Error in connection");
   if(isset($_POST['loginSubmit'])){
     $uname=$_POST['uname'];
@@ -64,10 +64,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script></head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <ul class="navbar-nav">
@@ -75,7 +80,7 @@
           <button id="title" data-bs-toggle="dropdown" aria-expanded="false">
             <h4 style="color: white;"> LITEWRITEUR </h4>
           </button>
-          <ul class="dropdown-menu dropdown-menu-dark" style="background-color: darkgray">
+          <ul class="dropdown-menu dropdown-menu-dark" style="color: black;">
             <li><a class="dropdown-item" href="#">Hot</a></li>
             <li><a class="dropdown-item" href="#">Newest</a></li>
             <li><a class="dropdown-item" href="#">Romance</a></li>
@@ -159,7 +164,7 @@
             <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
               <img height="25rem" src="more.png">
             </button>
-            <ul class="dropdown-menu dropdown-menu-dark">
+            <ul class="dropdown-menu dropdown-menu-light">
                 <li><a class="dropdown-item" href="#">Edit</a></li>
                 <li><a class="dropdown-item" href="#">Delete</a></li>
                 <!-- Naa rani sa posts sa opened account -->
