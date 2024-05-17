@@ -1,5 +1,90 @@
 <?php
   session_start();
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+      or die("Error in connection");
+  if(isset($_POST['loginSubmit'])){
+    $uname=$_POST['uname'];
+      $pwd=$_POST['pwd'];
+      $sql ="select * from tbluseraccount where username='".$uname."'";
+      $result = mysqli_query($con,$sql);
+      $count = mysqli_num_rows($result);
+      
+      $row = mysqli_fetch_array($result);
+      
+      if($count== 0){
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          User does not exist.
+        </div>";
+      }else if($row[3] != $pwd) {
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          Incorrect password.
+        </div>";
+      }else{
+          $_SESSION['accID']=$row[0];
+          $_SESSION['username']=$row[2];
+          $_SESSION['accType']=$row[4];
+          header("Location: homeview.php");
+      }
+  }
+  if(isset($_POST['registerSubmit'])){		
+		//retrieve data from form and save the value to a variable
+		//for tbluserprofile
+		$fname=$_POST['fname'];		
+		$lname=$_POST['lname'];
+    $country=$_POST['countryReg'];
+    $genre=$_POST['genreReg'];
+    $country=$_POST['countryReg'];
+    $bdateReg=$_POST['bdateReg'];
+		$gender=$_POST['rGender'];
+    $accType=$_POST['rAccType'];
+    
+    $bdate=date("Y-m-d", strtotime($bdateReg));
+    $today = date("Y-m-d");
+    $diff = date_diff(date_create($bdate), date_create($today));
+    $age = $diff->format('%y');
+		//for tbluseraccount
+		$email=$_POST['email'];		
+		$uname=$_POST['unameReg'];
+		$pword=$_POST['pwdReg'];
+		
+		//save data to tbluserprofile			
+		
+		
+		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
+		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
+		$result = mysqli_query($con,$sql2);
+		$row = mysqli_num_rows($result);
+		if($row == 0){
+			$sql ="Insert into tbluseraccount(emailadd,username,password,accType) values('".$email."','".$uname."','".$pword."','".$accType."')";
+			$result = mysqli_query($con,$sql);
+      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre,age) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."','".$age."')";
+		  $result = mysqli_query($con,$sql1);
+			echo "<div class='alert alert-success text-center' role='alert'>
+      Registered successfully!
+    </div>";
+		}else{
+			echo "<div class='alert alert-danger text-center' role='alert'>
+      Username already exists.
+    </div>";
+		}
+	}
+  if(isset($_POST['premiumSubmit'])){
+      $uname=$_POST['unamePrem'];
+      $duration=$_POST['flexRadioDefault'];
+      $sql ="select * from tbluseraccount where username='".$uname."'";
+      $result = mysqli_query($con,$sql);
+      $count = mysqli_num_rows($result);
+      
+      $row = mysqli_fetch_array($result);
+      
+      if($count== 0){
+          echo "<div class='alert alert-danger text-center' role='alert'>
+          User does not exist.
+        </div>";
+      }else{
+        $sql1 ="Insert into tblpremium(userid) values('".$row[0]."')";
+      }
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -92,9 +177,9 @@
                   <label class="form-check-label" for="rOther">
                     Other
                   </label>
-                </div>
+                </div><br>
+                <h6>Birthdate</h6>
                 <div class="row form-group">
-                        <label for="date" class="col-sm-1 col-form-label">Birthdate</label>
                         <div class="col-sm-4">
                             <div class="input-group date" id="datepicker">
                                 <input name="bdateReg" type="text" class="form-control">
@@ -175,102 +260,28 @@
         </div>
     </nav>
     <div class="row justify-content-evenly">
-    <?php
-  // session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
-      or die("Error in connection");
-  if(isset($_POST['loginSubmit'])){
-    $uname=$_POST['uname'];
-      $pwd=$_POST['pwd'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          User does not exist.
-        </div>";
-              
-      }else if($row[3] != $pwd) {
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          Incorrect password.
-        </div>";
-      }else{
-          $_SESSION['username']=$row[0];
-          echo "<h2 class='text-center'>WELCOME TO THE WEBSITE $uname</h2>";
-      }
-  }
-  if(isset($_POST['registerSubmit'])){		
-		//retrieve data from form and save the value to a variable
-		//for tbluserprofile
-		$fname=$_POST['fname'];		
-		$lname=$_POST['lname'];
-    $country=$_POST['countryReg'];
-    $genre=$_POST['genreReg'];
-    $country=$_POST['countryReg'];
-    $bdateReg=$_POST['bdateReg'];
-		$gender=$_POST['rGender'];
-    $accType=$_POST['rAccType'];
-    
-    $bdate=date("Y-m-d", strtotime($bdateReg));
-    $today = date("Y-m-d");
-    $diff = date_diff(date_create($bdate), date_create($today));
-    $age = $diff->format('%y');
-		//for tbluseraccount
-		$email=$_POST['email'];		
-		$uname=$_POST['unameReg'];
-		$pword=$_POST['pwdReg'];
-		
-		//save data to tbluserprofile			
-		
-		
-		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
-		$result = mysqli_query($con,$sql2);
-		$row = mysqli_num_rows($result);
-		if($row == 0){
-			$sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$uname."','".$pword."')";
-			$result = mysqli_query($con,$sql);
-      $sql1 ="Insert into tbluserprofile(firstname,lastname,gender,birthdate,accType,country,favGenre,age) values('".$fname."','".$lname."','".$gender."','".$bdate."','".$accType."','".$country."','".$genre."','".$age."')";
-		  $result = mysqli_query($con,$sql1);
-			echo "<div class='alert alert-success text-center' role='alert'>
-      Registered successfully!
-    </div>";
-		}else{
-			echo "<div class='alert alert-danger text-center' role='alert'>
-      Username already exists.
-    </div>";
-		}
-	}
-  if(isset($_POST['premiumSubmit'])){
-      $uname=$_POST['unamePrem'];
-      $duration=$_POST['flexRadioDefault'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<div class='alert alert-danger text-center' role='alert'>
-          User does not exist.
-        </div>";
-      }else{
-        $sql1 ="Insert into tblpremium(userid) values('".$row[0]."')";
-      }
-  }
-?>
 
   <h3 id="poststitle">Stories</h3>
 
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-        <ul class="navbar-nav">
+    <?php
+      $sql = "SELECT accID, title, content FROM tblposts ORDER BY postID DESC";
+      $result = mysqli_query($con, $sql);
+      $currOwner = $_SESSION['username'];
+
+      if(mysqli_num_rows($result) > 0)
+      {
+       while($row = mysqli_fetch_assoc($result)){
+        $sql2 = "SELECT username FROM tbluseraccount WHERE acctID='".$row["accID"]."'";
+        $res = mysqli_query($con, $sql2);
+        $row2 = mysqli_fetch_array($res);
+        $postOwner = $row2[0];
+        echo '<div class="divpost">
+        <div class="d-flex p-2">
+          <img src="avatar.jpg" height="25" style="margin-right: 1%">
+          <h6>'.$postOwner.'</h6>';
+          if ($postOwner == $currOwner) {
+            echo '<ul class="navbar-nav">
             <li class="nav-item dropdown">
             <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
               <img height="25rem" src="more.png">
@@ -281,7 +292,29 @@
                 <!-- Naa rani sa posts sa opened account -->
             </ul>
             </li>
-        </ul>
+        </ul>';
+          }
+      echo '</div>
+        <div class="card" style="width: 35rem;">
+          <img src="pic2.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">'.$row["title"].'</p>
+          </div>
+          <hr>
+          <div class="reactbox">
+            <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+          </div>
+        </div>
+      </div>';
+       }
+      }
+    ?>
+    <div class="divpost">
+      <div class="d-flex p-2">
+        <img src="avatar.jpg" height="25" style="margin-right: 1%">
+        <h6>Stephen Sales</h6>
       </div>
       <div class="card" style="width: 35rem;">
         <img src="pic2.jpg" class="card-img-top" alt="...">

@@ -72,7 +72,7 @@
             <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                 <li><a class="dropdown-item" href="engagements.php">Engagements</a></li>
-                <li><a class="dropdown-item" href="index.php">Log out</a></li>
+                <li><a class="dropdown-item" href="guestview.php">Log out</a></li>
             </ul>
             </li>
         </ul>
