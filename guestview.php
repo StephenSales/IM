@@ -1,6 +1,6 @@
 <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
       or die("Error in connection");
   if(isset($_POST['loginSubmit'])){
     $uname=$_POST['uname'];
@@ -267,7 +267,6 @@
     <?php
       $sql = "SELECT accID, title, content FROM tblposts ORDER BY postID DESC";
       $result = mysqli_query($con, $sql);
-      $currOwner = $_SESSION['username'];
 
       if(mysqli_num_rows($result) > 0)
       {
@@ -280,7 +279,6 @@
         <div class="d-flex p-2">
           <img src="avatar.jpg" height="25" style="margin-right: 1%">
           <h6>'.$postOwner.'</h6>';
-          if ($postOwner == $currOwner) {
             echo '<ul class="navbar-nav">
             <li class="nav-item dropdown">
             <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
@@ -293,7 +291,6 @@
             </ul>
             </li>
         </ul>';
-          }
       echo '</div>
         <div class="card" style="width: 35rem;">
           <img src="pic2.jpg" class="card-img-top" alt="...">

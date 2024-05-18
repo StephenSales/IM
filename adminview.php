@@ -1,65 +1,18 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
       or die("Error in connection");
-  if(isset($_POST['loginSubmit'])){
-    $uname=$_POST['uname'];
-      $pwd=$_POST['pwd'];
-      $sql ="select * from tbluseraccount where username='".$uname."'";
-      $result = mysqli_query($con,$sql);
-      $count = mysqli_num_rows($result);
-      
-      $row = mysqli_fetch_array($result);
-      
-      if($count== 0){
-          echo "<script language='javascript'>
-                      alert('username not existing.'); 
-              </script>";
-      }else if($row[3] != $pwd) {
-          echo "<script language='javascript'>
-                      alert('Incorrect password');
-              </script>";
-      }else{
-          $_SESSION['username']=$row[0];
-          echo "<script language='javascript'>
-                      alert('Welcome User: $uname'); 
-              </script>";
-      }
+  if(isset($_POST['publishSubmit'])){
+    $accID = $_SESSION['accID'];
+    $title = $_POST['title'];
+    $content = $_POST['content'];
+
+    $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
+    $result = mysqli_query($con,$sql);
+    echo "<div class='alert alert-success text-center' role='alert'>
+      Story posted successfully!
+    </div>";
   }
-  if(isset($_POST['registerSubmit'])){		
-		//retrieve data from form and save the value to a variable
-		//for tbluserprofile
-		$fname=$_POST['fname'];		
-		$lname=$_POST['lname'];
-		
-		
-		//for tbluseraccount
-		$email=$_POST['email'];		
-		$uname=$_POST['unameReg'];
-		$pword=$_POST['pwdReg'];
-		
-		//save data to tbluserprofile			
-		$sql1 ="Insert into tbluserprofile(firstname,lastname) values('".$fname."','".$lname."')";
-		$result = mysqli_query($con,$sql1);
-		
-		//Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-		$sql2 ="Select * from tbluseraccount where username='".$uname."'";
-		$result = mysqli_query($con,$sql2);
-		$row = mysqli_num_rows($result);
-		if($row == 0){
-			$sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$uname."','".$pword."')";
-			$result = mysqli_query($con,$sql);
-			echo "<script language='javascript'>
-						alert('New record saved.');
-				  </script>";
-		}else{
-			echo "<script language='javascript'>
-						alert('Username already existing');
-				  </script>";
-		}
-			
-		
-	}
 ?> -->
 <!DOCTYPE html>
 <html>
@@ -111,54 +64,294 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
             <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Username
+                <?php
+                  $word = $_SESSION['username'];
+                  echo "$word";
+                ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                <li><a class="dropdown-item" href="engagements.php">Engagements</a></li>
-                <li><a class="dropdown-item" href="index.php">Log out</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal" href="#">Update Profile</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" href="#" style="color: red">Delete Account</a></li>
+                <li><a class="dropdown-item" href="report.php">Records</a></li>
+                <li><a class="dropdown-item" href="stats.php">Statistics</a></li>
+                <li><a class="dropdown-item" href="guestview.php">Log out</a></li>
             </ul>
             </li>
         </ul>
     </nav>
     </div>
-</div>
+  </div>
 
-    <h3 id="poststitle">Publisher Requests</h3>
-    <div id="tblRequests">
-    <table class="table table-dark">
-        <thead>
-            <th>
-                <p>uid</p>
-            </th>
-            <th>
-                <p>Username</p>
-            </th>
-            <th>
-                <p>Country</p>
-            </th>
-            <th>
-                <p>Birthdate</p>
-            </th>
-            <th>
-                <p>Action</p>
-            </th>
-        </thead>
-        <tbody>
-            <th>3</th>
-            <td>Larry the Bird</td>
-            <td>Malaysia</td>
-            <td>01/02/2003</td> 
-            <td>
-                <input type="submit" name="btnAccept" value="Accept" style="margin-right: 0.3%">
-                <input type="submit" name="btnDecline" value="Decline">
-            </td>
-            </tr>
-        </tbody>
-        </table>
-    </div>
+  <h3 id="poststitle">Stories</h3>
+  <?php
+    if ($_SESSION['accType'] == "Publisher") {
+      echo '<button type="button" class="btn btn-primary" style="margin-left: 30%;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Write Story</button>';
+    }
+  ?>
   
-    <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray; ">
+  <!-- Create Post Modal / ONLY SHOW WHEN PUBLISHER ANG ACCOUNT -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Chapter Contents</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Title</label>
+              <input type="text" class="form-control" name="title">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Content</label>
+              <textarea class="form-control" name="content"></textarea>
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Publish" name="publishSubmit">
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="regModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            <form method="post">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="input-group mb-3">
+                  <input name="fname" type="text" aria-label="First name" class="form-control" placeholder="First Name">
+                  <input name="lname" type="text" aria-label="Last name" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Username</span>
+                  <input name="unameReg" type="text" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Email</span>
+                  <input name="email" type="email" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Password</span>
+                  <input name="pwdReg" type="password" aria-label="First name" class="form-control">
+                </div>
+                <h6>Gender</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rMale" value="Male" checked>
+                  <label class="form-check-label" for="rMale">
+                    Male
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rFem" value="Female">
+                  <label class="form-check-label" for="rFem">
+                    Female
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rOther" value="Other">
+                  <label class="form-check-label" for="rOther">
+                    Other
+                  </label>
+                </div><br>
+                <h6>Birthdate</h6>
+                <div class="row form-group">
+                        <div class="col-sm-4">
+                            <div class="input-group date" id="datepicker">
+                                <input name="bdateReg" type="text" class="form-control">
+                                <script type="text/javascript">
+                                    $(function() {
+                                        $('#datepicker').datepicker();
+                                    });
+                                </script>
+                                <span class="input-group-append">
+                                    <span class="input-group-text bg-white d-block">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <h6>Account Type</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rAccType" id="rUser" value="User" checked>
+                  <label class="form-check-label" for="rUser">
+                    User
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rAccType" id="rPub" value="Publisher">
+                  <label class="form-check-label" for="rPub">
+                    Publisher
+                  </label>
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Country</span>
+                  <input name="countryReg" type="text" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Favorite Genre</span>
+                  <input name="genreReg" type="text" aria-label="First name" class="form-control">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" name="registerSubmit">
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Alert</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Are you sure you want to delete this account?</label>
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" value="Publish" name="publishSubmit" style="background-color: red;">Yes</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
+    <?php
+      $sql = "SELECT accID, title, content FROM tblposts ORDER BY postID DESC";
+      $result = mysqli_query($con, $sql);
+      $currOwner = $_SESSION['username'];
+
+      if(mysqli_num_rows($result) > 0)
+      {
+       while($row = mysqli_fetch_assoc($result)){
+        $sql2 = "SELECT username FROM tbluseraccount WHERE acctID='".$row["accID"]."'";
+        $res = mysqli_query($con, $sql2);
+        $row2 = mysqli_fetch_array($res);
+        $postOwner = $row2[0];
+        echo '<div class="divpost">
+        <div class="d-flex p-2">
+          <img src="avatar.jpg" height="25" style="margin-right: 1%">
+          <h6>'.$postOwner.'</h6>';
+          if ($postOwner == $currOwner) {
+            echo '<ul class="navbar-nav">
+            <li class="nav-item dropdown">
+            <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
+              <img height="25rem" src="more.png">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-light">
+                <li><a class="dropdown-item" href="#">Edit</a></li>
+                <li><a class="dropdown-item" href="#">Delete</a></li>
+                <!-- Naa rani sa posts sa opened account -->
+            </ul>
+            </li>
+        </ul>';
+          }
+      echo '</div>
+        <div class="card" style="width: 35rem;">
+          <img src="pic2.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">'.$row["title"].'</p>
+          </div>
+          <hr>
+          <div class="reactbox">
+            <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+          </div>
+        </div>
+      </div>';
+       }
+      }
+    ?>
+    <div class="divpost">
+      <div class="d-flex p-2">
+        <img src="avatar.jpg" height="25" style="margin-right: 1%">
+        <h6>Stephen Sales</h6>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+            <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
+              <img height="25rem" src="more.png">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-light">
+                <li><a class="dropdown-item" href="#">Edit</a></li>
+                <li><a class="dropdown-item" href="#">Delete</a></li>
+                <!-- Naa rani sa posts sa opened account -->
+            </ul>
+            </li>
+        </ul>
+      </div>
+      <div class="card" style="width: 35rem;">
+        <img src="pic2.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">Sample caption</p>
+        </div>
+        <hr>
+        <div class="reactbox">
+          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="divpost">
+      <div class="d-flex p-2">
+        <img src="avatar.jpg" height="25" style="margin-right: 1%">
+        <h6>Stephen Sales</h6>
+      </div>
+      <div class="card" style="width: 35rem;">
+        <img src="pic2.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">Sample caption</p>
+        </div>
+        <hr>
+        <div class="reactbox">
+          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="divpost">
+      <div class="d-flex p-2">
+        <img src="avatar.jpg" height="25" style="margin-right: 1%">
+        <h6>Stephen Sales</h6>
+      </div>
+      <div class="card" style="width: 35rem;">
+        <img src="pic2.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">Caaaptionnn.</p>
+        </div>
+        <hr>
+        <div class="reactbox">
+          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
+          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray;">
       <div class="text-center p-3" id="footertext">
         Roddneil B. Gemina and Stephen Clint D. Sales
         <br/>

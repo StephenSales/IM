@@ -1,6 +1,6 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
       or die("Error in connection");
   if(isset($_POST['publishSubmit'])){
     $accID = $_SESSION['accID'];
@@ -70,8 +70,8 @@
                 ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                <li><a class="dropdown-item" href="engagements.php">Engagements</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal" href="#">Update Profile</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" href="#" style="color: red">Delete Account</a></li>
                 <li><a class="dropdown-item" href="guestview.php">Log out</a></li>
             </ul>
             </li>
@@ -110,6 +110,124 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <input type="submit" class="btn btn-primary" value="Publish" name="publishSubmit">
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="regModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            <form method="post">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="input-group mb-3">
+                  <input name="fname" type="text" aria-label="First name" class="form-control" placeholder="First Name">
+                  <input name="lname" type="text" aria-label="Last name" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Username</span>
+                  <input name="unameReg" type="text" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Email</span>
+                  <input name="email" type="email" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Password</span>
+                  <input name="pwdReg" type="password" aria-label="First name" class="form-control">
+                </div>
+                <h6>Gender</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rMale" value="Male" checked>
+                  <label class="form-check-label" for="rMale">
+                    Male
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rFem" value="Female">
+                  <label class="form-check-label" for="rFem">
+                    Female
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rGender" id="rOther" value="Other">
+                  <label class="form-check-label" for="rOther">
+                    Other
+                  </label>
+                </div><br>
+                <h6>Birthdate</h6>
+                <div class="row form-group">
+                        <div class="col-sm-4">
+                            <div class="input-group date" id="datepicker">
+                                <input name="bdateReg" type="text" class="form-control">
+                                <script type="text/javascript">
+                                    $(function() {
+                                        $('#datepicker').datepicker();
+                                    });
+                                </script>
+                                <span class="input-group-append">
+                                    <span class="input-group-text bg-white d-block">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <h6>Account Type</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rAccType" id="rUser" value="User" checked>
+                  <label class="form-check-label" for="rUser">
+                    User
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="rAccType" id="rPub" value="Publisher">
+                  <label class="form-check-label" for="rPub">
+                    Publisher
+                  </label>
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Country</span>
+                  <input name="countryReg" type="text" aria-label="First name" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="addon-wrapping">Favorite Genre</span>
+                  <input name="genreReg" type="text" aria-label="First name" class="form-control">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" name="registerSubmit">
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Alert</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Are you sure you want to delete this account?</label>
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" value="Publish" name="publishSubmit" style="background-color: red;">Yes</button>
         </div>
       </form>
       </div>
