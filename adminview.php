@@ -24,6 +24,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script></head>
+  <script type="text/javascript">
+    function editPostFunction(postID) {
+        var myVar = postID;
+        document.getElementById("hidden_inputE").value = myVar;
+        document.getElementById("editPostModal").submit();
+    }
+    function deletePostFunction(postID) {
+        var myVar = postID;
+        document.getElementById("hidden_inputD").value = myVar;
+        document.getElementById("deletePostModal").submit();
+    }
+</script>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <ul class="navbar-nav">
@@ -69,9 +81,8 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal" href="#">Update Profile</a></li>
+                <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" href="#" style="color: red">Delete Account</a></li>
-                <li><a class="dropdown-item" href="report.php">Records</a></li>
-                <li><a class="dropdown-item" href="stats.php">Statistics</a></li>
                 <li><a class="dropdown-item" href="guestview.php">Log out</a></li>
             </ul>
             </li>
@@ -109,10 +120,30 @@
       $age = $diff->format('%y');
       $accID = $_SESSION['accID'];
 
-      $sql = "UPDATE tbluserprofile SET gender='.$gender.', birthdate='.$bdate.', accType='.$accType.', country='.$country.', favGenre='.$genre.', age='.$age.' WHERE userid='.$accID.'";
+      $sql = "UPDATE tbluserprofile SET gender='".$gender."', birthdate='".$bdate."', accType='".$accType."', country='".$country."', favGenre='".$genre."', age='".$age."' WHERE userid='".$accID."'";
       $result = mysqli_query($con,$sql);
       echo "<div class='alert alert-success text-center' role='alert'>
         Profile Updated Successfully!
+      </div>";
+    }
+    if(isset($_POST['editPostSubmit'])){
+      $postID = $_POST['myVar'];
+      $title = $_POST['title'];
+      $content = $_POST['content'];
+
+      $sql = "UPDATE tblposts SET title='".$title."', content='".$content."' WHERE postID='".$postID."'";
+      $result = mysqli_query($con,$sql);
+      echo "<div class='alert alert-success text-center' role='alert'>
+        Story edited successfully!
+      </div>";
+    }
+    if(isset($_POST['deletePostSubmit'])){
+      $postID = $_POST['myVar'];
+
+      $sql = "UPDATE tblposts SET isDeleted='Yes' WHERE postID='".$postID."'";
+      $result = mysqli_query($con,$sql);
+      echo "<div class='alert alert-success text-center' role='alert'>
+        Story deleted successfully!
       </div>";
     }
   ?>
@@ -254,10 +285,63 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit Post Modal -->
+  <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="regModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Chapter Contents</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Title</label>
+              <input type="text" class="form-control" name="title">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Content</label>
+              <textarea class="form-control" name="content"></textarea>
+            </div>
+            <input type="hidden" name="myVar" id="hidden_inputE">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Edit Post" name="editPostSubmit">
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+        <!-- Delete Post Modal -->
+  <div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Alert</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Are you sure you want to delete this story?</label>
+            </div>
+            <input type="hidden" name="myVar" id="hidden_inputD">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <input type="submit" class="btn btn-primary" value="Yes" name="deletePostSubmit" style="background-color: red;">
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
   
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
     <?php
-      $sql = "SELECT * FROM tblposts ORDER BY postID DESC";
+      $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
       $result = mysqli_query($con, $sql);
       $currOwner = $_SESSION['username'];
 
@@ -268,6 +352,7 @@
         $res = mysqli_query($con, $sql2);
         $row2 = mysqli_fetch_array($res);
         $postOwner = $row2[0];
+        
         echo '<div class="divpost">
         <div class="d-flex p-2">
           <img src="avatar.jpg" height="25" style="margin-right: 1%">
@@ -278,8 +363,8 @@
               <img height="25rem" src="more.png">
             </button>
             <ul class="dropdown-menu dropdown-menu-light">
-                <li><a class="dropdown-item" href="#">Edit</a></li>
-                <li><a class="dropdown-item" href="#">Delete</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editPostModal" href="#" onclick=editPostFunction("'.$row["postID"].'")>Edit</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deletePostModal" href="#" onclick=deletePostFunction("'.$row["postID"].'")>Delete</a></li>
                 <!-- Naa rani sa posts sa opened account -->
             </ul>
             </li>

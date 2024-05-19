@@ -256,7 +256,7 @@
 
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
     <?php
-      $sql = "SELECT * FROM tblposts ORDER BY postID DESC";
+      $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
       $result = mysqli_query($con, $sql);
 
       if(mysqli_num_rows($result) > 0)
