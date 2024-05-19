@@ -1,19 +1,18 @@
 <!-- <?php
   session_start();
-  $con= mysqli_connect("127.0.0.1","root","","dbgeminaf1") 
-      or die("Error in connection");
-  if(isset($_POST['publishSubmit'])){
+  $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+    or die("Error in connection");
+  if(isset($_POST['deleteSubmit'])){
     $accID = $_SESSION['accID'];
-    $title = $_POST['title'];
-    $content = $_POST['content'];
 
-    $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
+    $sql = "UPDATE tbluserprofile SET isDeleted='Yes' WHERE userid='".$accID."'";
     $result = mysqli_query($con,$sql);
-    echo "<div class='alert alert-success text-center' role='alert'>
-      Story posted successfully!
-    </div>";
+    $sql = "UPDATE tbluseraccount SET isDeleted='Yes' WHERE acctid='".$accID."'";
+    $result = mysqli_query($con,$sql);
+    header("Location: guestview.php");
   }
-?> -->
+  ?>
+ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,6 +78,43 @@
     </nav>
     </div>
   </div>
+  <?php
+    $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
+    or die("Error in connection");
+    if(isset($_POST['publishSubmit'])){
+      $accID = $_SESSION['accID'];
+      $title = $_POST['title'];
+      $content = $_POST['content'];
+
+      $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
+      $result = mysqli_query($con,$sql);
+      echo "<div class='alert alert-success text-center' role='alert'>
+        Story posted successfully!
+      </div>";
+    }
+    if(isset($_POST['editSubmit'])){		
+      //retrieve data from form and save the value to a variable
+      //for tbluserprofile
+      $country=$_POST['countryReg'];
+      $genre=$_POST['genreReg'];
+      $country=$_POST['countryReg'];
+      $bdateReg=$_POST['bdateReg'];
+      $gender=$_POST['rGender'];
+      $accType=$_POST['rAccType'];
+      
+      $bdate=date("Y-m-d", strtotime($bdateReg));
+      $today = date("Y-m-d");
+      $diff = date_diff(date_create($bdate), date_create($today));
+      $age = $diff->format('%y');
+      $accID = $_SESSION['accID'];
+
+      $sql = "UPDATE tbluserprofile SET gender='".$gender."', birthdate='".$bdate."', accType='".$accType."', country='".$country."', favGenre='".$genre."', age='".$age."' WHERE userid='".$accID."'";
+      $result = mysqli_query($con,$sql);
+      echo "<div class='alert alert-success text-center' role='alert'>
+        Profile Updated Successfully!
+      </div>";
+    }
+  ?>
 
   <h3 id="poststitle">Stories</h3>
   <?php
@@ -126,22 +162,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <div class="input-group mb-3">
-                  <input name="fname" type="text" aria-label="First name" class="form-control" placeholder="First Name">
-                  <input name="lname" type="text" aria-label="Last name" class="form-control" placeholder="Last Name">
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">Username</span>
-                  <input name="unameReg" type="text" aria-label="First name" class="form-control">
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">Email</span>
-                  <input name="email" type="email" aria-label="First name" class="form-control">
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="addon-wrapping">Password</span>
-                  <input name="pwdReg" type="password" aria-label="First name" class="form-control">
-                </div>
                 <h6>Gender</h6>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="rGender" id="rMale" value="Male" checked>
@@ -203,7 +223,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" name="registerSubmit">
+                <input type="submit" class="btn btn-primary" name="editSubmit">
               </div>
             </form>
             </div>
@@ -227,7 +247,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary" value="Publish" name="publishSubmit" style="background-color: red;">Yes</button>
+          <input type="submit" class="btn btn-primary" value="Yes" name="deleteSubmit" style="background-color: red;">
         </div>
       </form>
       </div>
@@ -236,7 +256,7 @@
   
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
     <?php
-      $sql = "SELECT accID, title, content FROM tblposts ORDER BY postID DESC";
+      $sql = "SELECT * FROM tblposts ORDER BY postID DESC";
       $result = mysqli_query($con, $sql);
       $currOwner = $_SESSION['username'];
 
@@ -273,82 +293,15 @@
           </div>
           <hr>
           <div class="reactbox">
-            <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-            <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-            <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
+            <div class="react"><a href="..."><img src="heart.png" height="15rem">'.$row["numLikes"].'</a></div>
+            <div class="react"><a href="..."><img src="comment.png" height="15rem">'.$row["numComment"].'</a></div>
+            <div class="react"><a href="..."><img src="bookmark.png" height="15rem">'.$row["numBookmark"].'</a></div>
           </div>
         </div>
       </div>';
        }
       }
     ?>
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-            <button class="more" data-bs-toggle="dropdown" aria-expanded="false">
-              <img height="25rem" src="more.png">
-            </button>
-            <ul class="dropdown-menu dropdown-menu-light">
-                <li><a class="dropdown-item" href="#">Edit</a></li>
-                <li><a class="dropdown-item" href="#">Delete</a></li>
-                <!-- Naa rani sa posts sa opened account -->
-            </ul>
-            </li>
-        </ul>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Sample caption</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Sample caption</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-    <div class="divpost">
-      <div class="d-flex p-2">
-        <img src="avatar.jpg" height="25" style="margin-right: 1%">
-        <h6>Stephen Sales</h6>
-      </div>
-      <div class="card" style="width: 35rem;">
-        <img src="pic2.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Caaaptionnn.</p>
-        </div>
-        <hr>
-        <div class="reactbox">
-          <div class="react"><a href="..."><img src="heart.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="comment.png" height="15rem">0</a></div>
-          <div class="react"><a href="..."><img src="bookmark.png" height="15rem">0</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
     <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray;">
       <div class="text-center p-3" id="footertext">
         Roddneil B. Gemina and Stephen Clint D. Sales
