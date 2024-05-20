@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
   session_start();
   $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
     or die("Error in connection");
@@ -11,7 +11,7 @@
     $result = mysqli_query($con,$sql);
     header("Location: guestview.php");
   }
-?> -->
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,23 +23,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script></head>
-  <script type="text/javascript">
-    function editPostFunction(postID) {
-        var myVar = postID;
-        document.getElementById("hidden_inputE").value = myVar;
-        document.getElementById("editPostModal").submit();
-    }
-    function deletePostFunction(postID) {
-        var myVar = postID;
-        document.getElementById("hidden_inputD").value = myVar;
-        document.getElementById("deletePostModal").submit();
-    }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+</head>
+  <!-- <script>
     var ctx =document.getElementById("genderChart").getContext("2d");
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: <?php echo implode($_SESSION['genders'])?>
+            labels: ,
             datasets : [
                 {
                     label: 'Gender Distribution of Users',
@@ -47,22 +39,22 @@
                     borderColor: 'rgba(200,200,200,0.75)',
                     hoverBackgroundColor: 'rgba(200,200,200,1)',
                     hoverBorderColor: 'rgba(200,200,200,1)',
-                    data:<?php echo implode($_SESSION['genCount'])?>
+                    data:
                 }
             ]
-        }
+        },
         options: {
             legend: {
                 display: true,
                 position: 'bottom'
-            }
+            },
             responsive: true,
             maintainAspectRatio: false,
             aspectRatio: 0.5
         }
     })
-</script>
-<body>
+</script> -->
+<body style="margin-bottom: 100px">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
@@ -119,17 +111,6 @@
   <?php
     $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
     or die("Error in connection");
-    if(isset($_POST['publishSubmit'])){
-      $accID = $_SESSION['accID'];
-      $title = $_POST['title'];
-      $content = $_POST['content'];
-
-      $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
-      $result = mysqli_query($con,$sql);
-      echo "<div class='alert alert-success text-center' role='alert'>
-        Story posted successfully!
-      </div>";
-    }
     if(isset($_POST['editSubmit'])){		
       //retrieve data from form and save the value to a variable
       //for tbluserprofile
@@ -286,24 +267,132 @@
     <td class="text-center"> '.$res4[0].' </td>
     <td class="text-center"> '.$res5[0].' </td></tr></table>';
 
-    $sql6 = "SELECT gender, Count(gender) AS genCount FROM tbluserprofile WHERE isDeleted='No' GROUP BY gender";
+    $sql = "SELECT gender, Count(gender) AS genCount FROM tbluserprofile WHERE isDeleted='No' GROUP BY gender";
     //fire query
-    $result6 = mysqli_query($con, $sql6);
+    $result = mysqli_query($con, $sql);
     $_SESSION['genders'] = array();
     $_SESSION['genCount'] = array();
-    while($row6 = mysqli_fetch_assoc($result)){
-        array_push($_SESSION['genders'],$row6["gender"]);
-        array_push($_SESSION['genCount'],$row6["genCount"]);
+    while($row = mysqli_fetch_assoc($result)){
+        array_push($_SESSION['genders'],$row["gender"]);
+        array_push($_SESSION['genCount'],$row["genCount"]);
     }
     
-    
+    $sql = "SELECT country, Count(country) AS ctryCount FROM tbluserprofile WHERE isDeleted='No' GROUP BY country";
+    //fire query
+    $result = mysqli_query($con, $sql);
+    $_SESSION['countries'] = array();
+    $_SESSION['ctryCount'] = array();
+    while($row = mysqli_fetch_assoc($result)){
+        array_push($_SESSION['countries'],$row["country"]);
+        array_push($_SESSION['ctryCount'],$row["ctryCount"]);
+    }
+
+    $sql = "SELECT favGenre, Count(favGenre) AS genreCount FROM tbluserprofile WHERE isDeleted='No' GROUP BY favGenre";
+    //fire query
+    $result = mysqli_query($con, $sql);
+    $_SESSION['genres'] = array();
+    $_SESSION['genreCount'] = array();
+    while($row = mysqli_fetch_assoc($result)){
+        array_push($_SESSION['genres'],$row["favGenre"]);
+        array_push($_SESSION['genreCount'],$row["genreCount"]);
+    }
+
     // closing connection
     mysqli_close($con);
 ?>
-    <div class="chart-containter">
-        <canvas id="genderChart"></canvas>
+    <div class="chart-container">
+        <canvas id="genderChart" width="300" height="200"></canvas>
     </div>
 
+    <div class="chart-container">
+        <canvas id="countryChart" width="300" height="200"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="genreChart" width="300" height="200"></canvas>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctz = document.getElementById('genderChart');
+
+  new Chart(ctz, {
+    type: 'bar',
+    data: {
+      labels: <?php echo json_encode($_SESSION['genders'])?>,
+      datasets: [{
+        label: 'Gender Distribution of Users',
+        backgroundColor: 'rgba(64,219,196)',
+        borderColor: 'rgba(200,200,200,0.75)',
+        hoverBackgroundColor: 'rgba(200,200,200,1)',
+        hoverBorderColor: 'rgba(200,200,200,1)',
+        data:<?php echo json_encode($_SESSION['genCount'])?>
+      }]
+    },
+    options: {
+        legend: {
+                display: true,
+                position: 'bottom'
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 0.5
+    }
+  });
+
+  const cty = document.getElementById('countryChart');
+
+  new Chart(cty, {
+    type: 'bar',
+    data: {
+      labels: <?php echo json_encode($_SESSION['countries'])?>,
+      datasets: [{
+        label: 'Number of Users per Country',
+        backgroundColor: 'rgba(64,219,196)',
+        borderColor: 'rgba(200,200,200,0.75)',
+        hoverBackgroundColor: 'rgba(200,200,200,1)',
+        hoverBorderColor: 'rgba(200,200,200,1)',
+        data:<?php echo json_encode($_SESSION['ctryCount'])?>
+      }]
+    },
+    options: {
+        legend: {
+                display: true,
+                position: 'bottom'
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 0.5
+    }
+  });
+
+  const ctx = document.getElementById('genreChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <?php echo json_encode($_SESSION['genres'])?>,
+      datasets: [{
+        label: 'Number of Favorites per Genre',
+        backgroundColor: 'rgba(64,219,196)',
+        borderColor: 'rgba(200,200,200,0.75)',
+        hoverBackgroundColor: 'rgba(200,200,200,1)',
+        hoverBorderColor: 'rgba(200,200,200,1)',
+        data:<?php echo json_encode($_SESSION['genreCount'])?>
+      }]
+    },
+    options: {
+        legend: {
+                display: true,
+                position: 'bottom'
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 0.5
+    }
+  });
+</script>
 
     <footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" id="footer" style="background-color: lightgray;">
       <div class="text-center p-3" id="footertext">
