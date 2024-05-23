@@ -1,5 +1,6 @@
 <!-- <?php
   session_start();
+  $_SESSION['filter']="Newest";
   $con= mysqli_connect("127.0.0.1","root","","dbsalesf1") 
     or die("Error in connection");
   if(isset($_POST['deleteSubmit'])){
@@ -10,6 +11,27 @@
     $sql = "UPDATE tbluseraccount SET isDeleted='Yes' WHERE acctid='".$accID."'";
     $result = mysqli_query($con,$sql);
     header("Location: guestview.php");
+  }
+  if(isset($_POST['btnNew'])) {
+    $_SESSION['filter']="Newest";
+  }
+  if(isset($_POST['btnAction'])) {
+    $_SESSION['filter']="Action";
+  }
+  if(isset($_POST['btnComedy'])) {
+    $_SESSION['filter']="Comedy";
+  }
+  if(isset($_POST['btnDrama'])) {
+    $_SESSION['filter']="Drama";
+  }
+  if(isset($_POST['btnFantasy'])) {
+    $_SESSION['filter']="Fantasy";
+  }
+  if(isset($_POST['btnHorror'])) {
+    $_SESSION['filter']="Horror";
+  }
+  if(isset($_POST['btnRomance'])) {
+    $_SESSION['filter']="Romance";
   }
   ?>
  -->
@@ -41,19 +63,22 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <ul class="navbar-nav">
+      <form method="post">
         <li class="nav-item dropdown">
           <button id="title" data-bs-toggle="dropdown" aria-expanded="false">
             <h4 style="color: white;"> LITEWRITEUR </h4>
           </button>
           <ul class="dropdown-menu dropdown-menu-dark" style="color: black;">
-            <li><a class="dropdown-item" href="#">Hot</a></li>
-            <li><a class="dropdown-item" href="#">Newest</a></li>
-            <li><a class="dropdown-item" href="#">Romance</a></li>
-            <li><a class="dropdown-item" href="#">Horror</a></li>
-            <li><a class="dropdown-item" href="#">Comedy</a></li>
-            <li><a class="dropdown-item" href="#">Drama</a></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Newest" name="btnNew"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Action" name="btnAction"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Comedy" name="btnComedy"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Drama" name="btnDrama"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Fantasy" name="btnFantasy"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Horror" name="btnHorror"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Romance" name="btnRomance"></li>
           </ul>
         </li>
+      </form>
       </ul>
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
@@ -81,7 +106,7 @@
                   echo "$word";
                 ?>
             </button>
-            <ul class="dropdown-menu dropdown-menu-dark">
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal" href="#">Update Profile</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" href="#" style="color: red">Delete Account</a></li>
                 <li><a class="dropdown-item" href="guestview.php">Log out</a></li>
@@ -98,8 +123,9 @@
       $accID = $_SESSION['accID'];
       $title = $_POST['title'];
       $content = $_POST['content'];
+      $genre = $_POST['postGenre'];
 
-      $sql = "Insert into tblposts(accID,title,content) values('".$accID."','".$title."','".$content."')";
+      $sql = "Insert into tblposts(accID,title,content,genre) values('".$accID."','".$title."','".$content."','".$genre."')";
       $result = mysqli_query($con,$sql);
       echo "<div class='alert alert-success text-center' role='alert'>
         Story posted successfully!
@@ -131,8 +157,9 @@
       $postID = $_POST['myVar'];
       $title = $_POST['title'];
       $content = $_POST['content'];
+      $genre = $_POST['postGenre'];
 
-      $sql = "UPDATE tblposts SET title='".$title."', content='".$content."' WHERE postID='".$postID."'";
+      $sql = "UPDATE tblposts SET title='".$title."', content='".$content."', genre='".$genre."' WHERE postID='".$postID."'";
       $result = mysqli_query($con,$sql);
       echo "<div class='alert alert-success text-center' role='alert'>
         Story edited successfully!
@@ -174,7 +201,15 @@
               <label for="message-text" class="col-form-label">Content</label>
               <textarea class="form-control" name="content"></textarea>
             </div>
-          
+            <select class="form-select" aria-label="Default select example" name="postGenre">
+              <option selected>Genre</option>
+              <option value="Action">Action</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Horror">Horror</option>
+              <option value="Romance">Romance</option>
+            </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -305,6 +340,15 @@
               <label for="message-text" class="col-form-label">Content</label>
               <textarea class="form-control" name="content"></textarea>
             </div>
+            <select class="form-select" aria-label="Default select example" name="postGenre">
+              <option selected>Genre</option>
+              <option value="Action">Action</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Horror">Horror</option>
+              <option value="Romance">Romance</option>
+            </select>
             <input type="hidden" name="myVar" id="hidden_inputE">
         </div>
         <div class="modal-footer">
@@ -342,7 +386,12 @@
   
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
     <?php
-      $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
+      $genre = $_SESSION['filter'];
+      if($genre == "Newest") {
+        $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
+      } else {
+        $sql = "SELECT * FROM tblposts WHERE isDeleted='No' AND genre = '".$genre."' ORDER BY postID DESC";
+      }
       $result = mysqli_query($con, $sql);
       $currOwner = $_SESSION['username'];
 

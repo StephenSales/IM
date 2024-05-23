@@ -23,12 +23,34 @@
             $_SESSION['accID']=$row[0];
             $_SESSION['username']=$row[2];
             $_SESSION['accType']=$row[4];
+            $_SESSION['filter']="Newest";
             if($row[4] == "Admin") {
               header("Location: adminview.php");
             } else {
               header("Location: homeview.php");
             }
         }
+    }
+    if(isset($_POST['btnNew'])) {
+      $_SESSION['filter']="Newest";
+    }
+    if(isset($_POST['btnAction'])) {
+      $_SESSION['filter']="Action";
+    }
+    if(isset($_POST['btnComedy'])) {
+      $_SESSION['filter']="Comedy";
+    }
+    if(isset($_POST['btnDrama'])) {
+      $_SESSION['filter']="Drama";
+    }
+    if(isset($_POST['btnFantasy'])) {
+      $_SESSION['filter']="Fantasy";
+    }
+    if(isset($_POST['btnHorror'])) {
+      $_SESSION['filter']="Horror";
+    }
+    if(isset($_POST['btnRomance'])) {
+      $_SESSION['filter']="Romance";
     }
 ?>
 <!DOCTYPE html>
@@ -47,19 +69,22 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <ul class="navbar-nav">
+      <form method="post">
         <li class="nav-item dropdown">
           <button id="title" data-bs-toggle="dropdown" aria-expanded="false">
             <h4 style="color: white;"> LITEWRITEUR </h4>
           </button>
           <ul class="dropdown-menu dropdown-menu-dark" style="color: black;">
-            <li><a class="dropdown-item" href="#">Hot</a></li>
-            <li><a class="dropdown-item" href="#">Newest</a></li>
-            <li><a class="dropdown-item" href="#">Romance</a></li>
-            <li><a class="dropdown-item" href="#">Horror</a></li>
-            <li><a class="dropdown-item" href="#">Comedy</a></li>
-            <li><a class="dropdown-item" href="#">Drama</a></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Newest" name="btnNew"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Action" name="btnAction"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Comedy" name="btnComedy"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Drama" name="btnDrama"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Fantasy" name="btnFantasy"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Horror" name="btnHorror"></li>
+            <li><input type="submit" class="dropdown-item" href="#" value="Romance" name="btnRomance"></li>
           </ul>
         </li>
+      </form>
       </ul>
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav mr-auto">
@@ -256,7 +281,12 @@
 
   <div class="d-flex flex-column mb-3" style="padding-bottom: 10%;">
     <?php
-      $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
+      $genre = $_SESSION['filter'];
+      if($genre == "Newest") {
+        $sql = "SELECT * FROM tblposts WHERE isDeleted='No' ORDER BY postID DESC";
+      } else {
+        $sql = "SELECT * FROM tblposts WHERE isDeleted='No' AND genre = '".$genre."' ORDER BY postID DESC";
+      }
       $result = mysqli_query($con, $sql);
 
       if(mysqli_num_rows($result) > 0)
